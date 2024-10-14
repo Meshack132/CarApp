@@ -1,7 +1,30 @@
-@* Views/Car/Index.cshtml *@
-@{
-    ViewData["Title"] = "Car List";
-}
+@model List<CarApp.Models.Car>
 
-<h1>@ViewData["Title"]</h1>
-<p>Hello, this is the car list page!</p>
+<h2>Car List</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Make</th>
+                <th>Model</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.Id</td>
+                    <td>@(car.Make ?? "Unknown")</td> <!-- Corrected: this will print "Unknown" if Make is null -->
+                    <td>@(car.Model ?? "Unknown")</td> <!-- Corrected: this will print "Unknown" if Model is null -->
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No cars available.</p>
+}

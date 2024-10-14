@@ -28,3 +28,4 @@ C:\Users\Alsfine\CarApp\obj\Debug\net8.0\refint\CarApp.dll
 C:\Users\Alsfine\CarApp\obj\Debug\net8.0\CarApp.pdb
 C:\Users\Alsfine\CarApp\obj\Debug\net8.0\CarApp.genruntimeconfig.cache
 C:\Users\Alsfine\CarApp\obj\Debug\net8.0\ref\CarApp.dll
+C:\Users\Alsfine\CarApp\obj\Debug\net8.0\CarApp.sourcelink.json

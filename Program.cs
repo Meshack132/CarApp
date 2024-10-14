@@ -12,7 +12,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// Commenting out HTTPS redirection as we are not using HTTPS.
 app.UseStaticFiles();
 app.UseRouting();
 

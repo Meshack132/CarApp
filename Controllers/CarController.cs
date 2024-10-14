@@ -1,28 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
-using CarApp.Models;
-using System.Collections.Generic;
+using CarApp.Models; // Assuming the models namespace
 
 namespace CarApp.Controllers
 {
     public class CarController : Controller
     {
-        private static List<Car> Cars = new List<Car>
+        // This is just an example list, you may fetch it from a database
+        private static List<Car> cars = new List<Car>
         {
-            new Car { Id = 1, Make = "Toyota", Model = "Corolla", Year = 2018 },
-            new Car { Id = 2, Make = "Honda", Model = "Civic", Year = 2020 },
-            new Car { Id = 3, Make = "Ford", Model = "Focus", Year = 2019 }
+            new Car { Id = 1, Make = "Toyota", Model = "Corolla" },
+            new Car { Id = 2, Make = "Honda", Model = "Civic" }
         };
 
         public IActionResult Index()
         {
-            return View(Cars);
-        }
-
-        public IActionResult Details(int id)
-        {
-            var car = Cars.Find(c => c.Id == id);
-            if (car == null) return NotFound();
-            return View(car);
+            // Passing the list of cars to the view
+            return View(cars);
         }
     }
 }
