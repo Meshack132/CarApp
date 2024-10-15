@@ -36,6 +36,22 @@ Copy code
 dotnet run
 The application will be available at http://localhost:5063.
 
+# CarApp
+
+[![Docker Image CI](https://github.com/Meshack132/CarApp/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Meshack132/CarApp/actions/workflows/docker-image.yml)
+
+## Description
+This project is a car application that manages car details and provides a user-friendly interface for users.
+
+## Features
+- Add, edit, and delete car information.
+- View a list of all cars.
+- Responsive design for various devices.
+
+## Getting Started
+To get a copy of this project up and running on your local machine, follow these instructions.
+
+
 Contributing
 Contributions are welcome! Please open an issue or submit a pull request.
 
