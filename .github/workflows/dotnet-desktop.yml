@@ -15,12 +15,13 @@ jobs:
         configuration: [Debug, Release]
 
     runs-on: windows-latest  
+    
+     env:
+  Solution_Name: CarApp.sln                         # The solution file is CarApp.sln
+  Test_Project_Path: CarApp/CarApp.csproj            # Correct path to your CarApp.csproj file
+  Wap_Project_Directory: CarApp.Wap                  # Directory containing the .wapproj file, if applicable
+  Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj    # Full path to the .wapproj file, if applicable
 
-    env:
-      Solution_Name: CarApp.sln                      # The solution file is CarApp.sln
-      Test_Project_Path: CarApp/CarApp.csproj        # Path to your test project or main project
-      Wap_Project_Directory: CarApp.Wap              # Directory containing the .wapproj file
-      Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj # Full path to the .wapproj file
 
     steps:
     - name: Checkout
