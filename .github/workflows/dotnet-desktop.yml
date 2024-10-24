@@ -36,11 +36,6 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    - name: List WAP Directory
-      run: |
-        echo "Listing contents of WAP Project Directory"
-        Get-ChildItem -Path ${{ env.Wap_Project_Directory }} -Recurse
-
     - name: Restore the application
       run: |
         echo "Restoring solution..."
