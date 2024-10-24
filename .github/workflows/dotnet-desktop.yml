@@ -38,7 +38,9 @@ jobs:
 
     # Restore the application
     - name: Restore the application
-      run: msbuild ${{ env.Solution_Name }} /t:Restore /p:Configuration=${{ matrix.configuration }}
+      run: |
+        echo "Restoring solution..."
+        msbuild ${{ env.Solution_Name }} /t:Restore /p:Configuration=${{ matrix.configuration }} || exit 1
       env:
         Configuration: ${{ matrix.configuration }}
 
