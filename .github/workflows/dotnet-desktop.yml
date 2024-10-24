@@ -8,16 +8,18 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 30  # Timeout setting for the job
+
     strategy:
       matrix:
         configuration: [Debug, Release]
 
-    runs-on: windows-latest  # This will run the workflow on a Windows runner
+    runs-on: windows-latest
 
     env:
-      Solution_Name: CarApp.sln                               # The solution file is CarApp.sln
-      Wap_Project_Directory: CarApp.Wap                      # Directory containing the .wapproj file
-      Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj        # Full path to the .wapproj file
+      Solution_Name: CarApp.sln
+      Wap_Project_Directory: CarApp.Wap
+      Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj
 
     steps:
     - name: Checkout
@@ -25,24 +27,20 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET SDK
     - name: Install .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'  # Ensure you're using the correct .NET version
-        include-prerelease: true  # This allows installation of pre-release versions if needed
+        dotnet-version: '8.0.x'
+        include-prerelease: true
 
-    # Add MSBuild to the PATH
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
-    # Log the contents of the WAP project directory for troubleshooting
     - name: List WAP Directory
       run: |
-        Write-Host "Listing contents of WAP Project Directory"
+        echo "Listing contents of WAP Project Directory"
         Get-ChildItem -Path ${{ env.Wap_Project_Directory }} -Recurse
 
-    # Restore the application
     - name: Restore the application
       run: |
         echo "Restoring solution..."
@@ -50,15 +48,13 @@ jobs:
       env:
         Configuration: ${{ matrix.configuration }}
 
-    # Decode the base 64 encoded pfx (if you're using certificates)
     - name: Decode the pfx
       run: |
-        New-Item -Path $env:Wap_Project_Directory -ItemType Directory -Force  # Create the directory if it doesn't exist
+        New-Item -Path $env:Wap_Project_Directory -ItemType Directory -Force
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # Create the app package (if using a WAP project)
     - name: Create the app package
       run: |
         echo "Building the app package..."
@@ -69,11 +65,9 @@ jobs:
         Appx_Package_Build_Mode: StoreUpload
         Configuration: ${{ matrix.configuration }}
 
-    # Remove the pfx file after the build
     - name: Remove the pfx
       run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
 
-    # Upload the build artifacts (if you want to store them)
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
