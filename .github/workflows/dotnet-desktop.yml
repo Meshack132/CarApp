@@ -16,9 +16,9 @@ jobs:
     runs-on: windows-latest  # This will run the workflow on a Windows runner
 
     env:
-      Solution_Name: CarApp.sln                          # The solution file is CarApp.sln
-      Wap_Project_Directory: CarApp.Wap                  # Directory containing the .wapproj file
-      Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj    # Full path to the .wapproj file
+      Solution_Name: CarApp.sln                              # The solution file is CarApp.sln
+      Wap_Project_Directory: CarApp.Wap                     # Directory containing the .wapproj file
+      Wap_Project_Path: CarApp.Wap/CarApp.Wap.wapproj       # Full path to the .wapproj file
 
     steps:
     - name: Checkout
@@ -30,7 +30,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x                           # Ensure you're using the correct .NET version
+        dotnet-version: 8.0.x                                  # Ensure you're using the correct .NET version
 
     # Add MSBuild to the PATH
     - name: Setup MSBuild.exe
@@ -45,6 +45,7 @@ jobs:
     # Decode the base 64 encoded pfx (if you're using certificates)
     - name: Decode the pfx
       run: |
+        New-Item -Path $env:Wap_Project_Directory -ItemType Directory -Force  # Create the directory if it doesn't exist
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
