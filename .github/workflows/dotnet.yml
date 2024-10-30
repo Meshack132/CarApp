@@ -24,11 +24,11 @@ jobs:
 
     - name: Check for CarApp.csproj
       run: |
-        echo "Checking for CarApp.csproj:"
-        if [ -f "CarApp/CarApp.csproj" ]; then
+        echo "Checking for CarApp.csproj in the repository:"
+        if [ -f "./CarApp/CarApp.csproj" ]; then
           echo "CarApp.csproj found."
         else
-          echo "CarApp.csproj not found!"
+          echo "CarApp.csproj not found in ./CarApp/!"
           exit 1
         fi
 
