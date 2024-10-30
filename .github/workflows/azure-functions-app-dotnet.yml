@@ -5,43 +5,39 @@ on:
     branches: ["main"]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                # Set this to your function app name on Azure
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'CarApp'               # Path to your function app project folder
-  DOTNET_VERSION: '6.0.x'                                # .NET version to use
-  Project_Path: 'CarApp/CarApp.csproj'                   # Path to your .csproj file within the repository
-  Solution_Name: 'CarApp.sln'                            # Optional: specify solution file if needed
-  DOTNET_ROOT: 'C:\Program Files\dotnet'                 # Path to the .NET SDK
+  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                # Set to your Azure Function App name
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'                    # Set to root or the folder containing CarApp
+  DOTNET_VERSION: '6.0.x'                                # Set .NET version to use
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest                              # For Linux, change to ubuntu-latest
-    environment: dev                                     # Modify based on environment (e.g., prod)
+    runs-on: windows-latest                              # Change to ubuntu-latest for Linux
+    environment: dev                                     # Update based on environment
 
     steps:
-    - name: 'Checkout GitHub Action'
+    - name: 'Checkout Code'
       uses: actions/checkout@v4
 
-    - name: 'List directory contents'                    # Lists directory contents for troubleshooting path issues
-      run: ls -R
+    - name: 'List Directory Contents'                    # Debugging step
+      run: ls -R                                         # Lists contents to confirm file paths
 
     - name: Setup .NET Environment
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: 'Restore Dependencies Using Dotnet'
+    - name: 'Restore Project Dependencies'
       shell: pwsh                                        # Use bash if on Linux
-      run: dotnet restore ${{ env.Project_Path }}
+      run: dotnet restore './CarApp/CarApp.csproj'       # Ensure path is correct
 
     - name: 'Build Project'
-      shell: pwsh                                        # Use bash if on Linux
-      run: |
-        dotnet build ${{ env.Project_Path }} --configuration Release --output ./output
+      shell: pwsh
+      run: dotnet build './CarApp/CarApp.csproj' --configuration Release --output ./output
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
       id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }} # Set up this secret with the publish profile
+        package: './output'
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
