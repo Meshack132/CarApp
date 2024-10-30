@@ -5,8 +5,8 @@ on:
     branches: ["main"]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                    # Your Azure Function App name
-  DOTNET_VERSION: '6.0.x'                                    # .NET version
+  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                    # Replace with your Azure Function App name
+  DOTNET_VERSION: '6.0.x'                                    # .NET version to use
 
 jobs:
   build-and-deploy:
@@ -17,7 +17,7 @@ jobs:
     - name: 'Checkout Code'
       uses: actions/checkout@v4
 
-    # Step 2: Confirm working directory
+    # Step 2: Show the current working directory
     - name: 'Show Working Directory'
       run: |
         echo "Current working directory:"
@@ -27,22 +27,22 @@ jobs:
     - name: 'List Directory Contents'
       run: |
         echo "Listing all files in the repository to locate CarApp.csproj:"
-        ls -R
+        dir -Recurse
 
-    # Step 4: Dynamically set the path for CarApp.csproj based on directory structure
+    # Step 4: Locate CarApp.csproj and set the PROJECT_PATH dynamically
     - name: 'Locate CarApp.csproj'
-      id: locate-project
+      shell: pwsh                                             # Use PowerShell syntax
       run: |
-        if [[ -f "./CarApp/CarApp.csproj" ]]; then
-          echo "Project file found at CarApp/CarApp.csproj"
-          echo "PROJECT_PATH=CarApp/CarApp.csproj" >> $GITHUB_ENV
-        elif [[ -f "./CarApp.csproj" ]]; then
-          echo "Project file found at CarApp.csproj"
-          echo "PROJECT_PATH=CarApp.csproj" >> $GITHUB_ENV
-        else
-          echo "Error: Project file not found in expected locations."
+        if (Test-Path "./CarApp/CarApp.csproj") {
+          Write-Output "Project file found at CarApp/CarApp.csproj"
+          Add-Content -Path $env:GITHUB_ENV -Value "PROJECT_PATH=CarApp/CarApp.csproj"
+        } elseif (Test-Path "./CarApp.csproj") {
+          Write-Output "Project file found at CarApp.csproj"
+          Add-Content -Path $env:GITHUB_ENV -Value "PROJECT_PATH=CarApp.csproj"
+        } else {
+          Write-Error "Error: Project file not found in expected locations."
           exit 1
-        fi
+        }
 
     # Step 5: Setup the .NET environment based on the specified version
     - name: Setup .NET Environment
