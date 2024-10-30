@@ -5,39 +5,39 @@ on:
     branches: ["main"]
 
 env:
-  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                # Set to your Azure Function App name
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'                    # Set to root or the folder containing CarApp
-  DOTNET_VERSION: '6.0.x'                                # Set .NET version to use
+  AZURE_FUNCTIONAPP_NAME: 'your-app-name'                # Set your Azure Function App name here
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'                    # Adjust if project is in a specific folder
+  DOTNET_VERSION: '6.0.x'                                # Specify the .NET version
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest                              # Change to ubuntu-latest for Linux
-    environment: dev                                     # Update based on environment
+    runs-on: windows-latest                              # Change to ubuntu-latest if using Linux
 
     steps:
     - name: 'Checkout Code'
       uses: actions/checkout@v4
 
-    - name: 'List Directory Contents'                    # Debugging step
-      run: ls -R                                         # Lists contents to confirm file paths
+    - name: 'List Directory Contents'                    # Step to verify the structure
+      run: |
+        echo "Listing root directory contents"
+        ls -R
+        echo "Checking for CarApp/CarApp.csproj specifically"
+        ls CarApp || echo "CarApp directory not found"
 
     - name: Setup .NET Environment
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: 'Restore Project Dependencies'
-      shell: pwsh                                        # Use bash if on Linux
-      run: dotnet restore './CarApp/CarApp.csproj'       # Ensure path is correct
+    - name: 'Restore Dependencies'
+      run: dotnet restore './CarApp/CarApp.csproj'       # Adjust path if needed based on ls output
 
     - name: 'Build Project'
-      shell: pwsh
-      run: dotnet build './CarApp/CarApp.csproj' --configuration Release --output ./output
+      run: dotnet build './CarApp/CarApp.csproj' --configuration Debug
 
     - name: 'Run Azure Functions Action'
       uses: Azure/functions-action@v1
-      id: fa
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        package: './output'
+        package: './CarApp/output'
         publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
