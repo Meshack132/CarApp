@@ -16,13 +16,32 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: List directory contents
+      run: |
+        echo "Listing directory contents:"
+        ls -R
+
+    - name: Check for CarApp.csproj
+      run: |
+        echo "Checking for CarApp.csproj:"
+        if [ -f "CarApp/CarApp.csproj" ]; then
+          echo "CarApp.csproj found."
+        else
+          echo "CarApp.csproj not found!"
+          exit 1
+        fi
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
     - name: Restore dependencies
       run: dotnet restore CarApp/CarApp.csproj
+
     - name: Build
       run: dotnet build CarApp/CarApp.csproj --no-restore --configuration Release
+
     - name: Test
       run: dotnet test CarApp/CarApp.csproj --no-build --verbosity normal
